@@ -74,6 +74,10 @@ contract CryptoLand is ERC721, ERC721Enumerable {
     }
 
     function buyLand(uint256 _id, string memory _ownerName) public payable {
+        require(
+            msg.sender != currentLand.ownerID,
+            "The seller cant buy his own land"
+        );
         Land storage currentLand = landsInArr[_id];
         address seller = currentLand.ownerID;
         currentLand.ownerName = _ownerName;
