@@ -30,7 +30,7 @@ const UpdateLand = () => {
 		let land = await contract.methods.landsInArr(id).call();
 		setLandFromDB(land);
 		setNewPrice(land.price);
-		setNewGame(land.game);
+		setNewGame("");
 	};
 
 	const loadWeb3Contract = async (web3) => {

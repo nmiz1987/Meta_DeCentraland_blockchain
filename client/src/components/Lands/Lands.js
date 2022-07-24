@@ -64,7 +64,7 @@ const Lands = () => {
 			<div className="allLand">
 				<Map />
 				{!lands.length ? (
-					<h1>Loading...</h1>
+					<h1>No land in the system...</h1>
 				) : (
 					lands.map((land, index) => (
 						<OneLand key={index} info={land} index={index} />

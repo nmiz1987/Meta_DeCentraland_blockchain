@@ -26,19 +26,26 @@ contract CryptoLand is ERC721, ERC721Enumerable {
     function createOneLand(
         string memory _typeOfLand,
         uint256 _price,
-        bool _forSale
+        bool _forSale,
+        uint256 index
     ) public {
         require(msg.sender == owner, "Only the owner can create new land");
         uint256 id = landsInArr.length;
         require(
             id <= 10000,
             "Meta DeCentraland has reached the limit of 10000 lands"
-        ); //100 rows * 100 columns
+        ); //50 rows * 50 columns
+        // make sure that there aren't 2 NFTs the same!
+        require(
+            index >= id,
+            "The land you are trying to create is already in the blockchain!"
+        );
         string memory _game;
 
         // make sure that roads and park are to expensive to purchase
         if (compareStrings(_typeOfLand, "Real Estate")) {
             _game = "https://numble-clone.vercel.app/";
+            _price = 5; // default price
         } else {
             _game = "";
             _price = 999999999;
@@ -74,11 +81,11 @@ contract CryptoLand is ERC721, ERC721Enumerable {
     }
 
     function buyLand(uint256 _id, string memory _ownerName) public payable {
+        Land storage currentLand = landsInArr[_id];
         require(
             msg.sender != currentLand.ownerID,
             "The seller cant buy his own land"
         );
-        Land storage currentLand = landsInArr[_id];
         address seller = currentLand.ownerID;
         currentLand.ownerName = _ownerName;
         currentLand.ownerID = msg.sender;

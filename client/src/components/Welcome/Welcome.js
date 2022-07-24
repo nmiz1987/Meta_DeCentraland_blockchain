@@ -10,6 +10,7 @@ import ContractContext from "../../contexts/ContractContext";
 import getWeb3 from "../../getWeb3.js";
 import CryptoLand from "../../contracts/CryptoLand.json";
 import CryptoUser from "../../contracts/CryptoUser.json";
+import CryptoToken from "../../contracts/CryptoToken.json";
 const landsDB = require("../../landsDB.json");
 
 const Welcome = () => {
@@ -36,22 +37,19 @@ const Welcome = () => {
 
 	const loadWeb3UsersContract = async (web3) => {
 		let add = await loadWeb3Account(web3);
-
 		const networkId = await web3.eth.net.getId();
 		const networkData = CryptoUser.networks[networkId];
 		if (networkData) {
 			const abi = CryptoUser.abi;
 			const address = networkData.address;
 			const contract = new web3.eth.Contract(abi, address);
-
 			const owner = await contract.methods.owner().call();
 			localStorage.setItem("user-contract-owner", owner);
-
-			// await contract.methods.createNewUser().send({ from: add }, (error) => {
-			// 	if (!error) {
-			// 		console.log("New User");
-			// 	}
-			// });
+			await contract.methods.createNewUser().send({ from: add }, (error) => {
+				if (!error) {
+					console.log("New User Created");
+				}
+			});
 			return contract;
 		}
 	};
@@ -84,8 +82,20 @@ const Welcome = () => {
 		}
 	};
 
+	const loadWeb3TokenContract = async (web3) => {
+		const networkId = await web3.eth.net.getId();
+		const networkData = CryptoToken.networks[networkId];
+		if (networkData) {
+			const abi = CryptoToken.abi;
+			const address = networkData.address;
+			const contract = new web3.eth.Contract(abi, address);
+			return contract;
+		}
+	};
+
 	const mint = async (landContract, account) => {
 		console.log("account", account);
+		//there are 10000 lands in the DB
 		for (let i = 0; i < 2; i++) {
 			const tmp = {
 				type: landsDB[i].type,
@@ -93,7 +103,7 @@ const Welcome = () => {
 				forSale: landsDB[i].forSale,
 			};
 			await landContract.methods
-				.createOneLand(tmp.type, tmp.price, tmp.forSale)
+				.createOneLand(tmp.type, tmp.price, tmp.forSale, i)
 				.send({ from: account }, (error) => {
 					if (!error) {
 						console.log("land created", tmp);
@@ -104,6 +114,7 @@ const Welcome = () => {
 
 	const createLand = async () => {
 		const web3 = await getWeb3();
+		await loadWeb3TokenContract(web3);
 		const account = await loadWeb3Account(web3);
 		const landContract = await loadWeb3LandContract(web3);
 		await mint(landContract, account);
@@ -130,7 +141,7 @@ const Welcome = () => {
 								<div onClick={enterAsGuest}>Enter as Guest</div>
 							</li>
 							<li>
-								<div onClick={createLand}>Create land!</div>
+								<div onClick={createLand}>ADMIN - Create Token and Land!</div>
 							</li>
 						</>
 					)}

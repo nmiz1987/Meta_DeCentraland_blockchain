@@ -84,7 +84,7 @@ const LandInfo = () => {
 								<u>
 									<strong>Land price:</strong>
 								</u>{" "}
-								{landFromDB.price} $
+								{landFromDB.price} Ether
 								{accountInfo !== landFromDB.ownerID && accountInfo !== "guest" && (
 									<div className="link-buy-land">
 										<br />

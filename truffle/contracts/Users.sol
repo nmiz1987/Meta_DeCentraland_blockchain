@@ -2,11 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+
+import "./Token.sol";
 
 contract CryptoUser is ERC721, ERC721Enumerable {
     //owner of user's contract will hold the money
-    address public owner;
+    address payable public owner;
 
     User[] public usersInArr;
     mapping(address => User) public users;
@@ -17,31 +20,31 @@ contract CryptoUser is ERC721, ERC721Enumerable {
     }
 
     constructor() public ERC721("MetaUsers", "ETH") {
-        owner = msg.sender;
+        owner = payable(msg.sender);
     }
 
     // true = new user created, false = user was already in the system
-    function createNewUser() public payable returns (bool) {
-        for (uint256 i = 0; i < usersInArr.length; i++) {
-            if (usersInArr[i].userAddress == msg.sender) {
-                return true;
-            }
-        }
-        // if user is not in the system (new user) he will recied money, if he is in the system nothing will happen
-        User memory newUser = User(msg.sender, usersInArr.length);
-        users[msg.sender] = newUser;
-        usersInArr.push(newUser);
+    function createNewUser(address newUser) internal returns (bool) {
         if (msg.sender != owner) {
-            // payable(owner).transfer(50);
-            approve(msg.sender, 20 * 1e18);
-            transferFrom(owner, msg.sender, 20 * 1e18);
+            for (uint256 i = 0; i < usersInArr.length; i++) {
+                if (usersInArr[i].userAddress == msg.sender) {
+                    return false;
+                }
+            }
+            // if user is not in the system (new user) he will recied money, if he is in the system nothing will happen
+            User memory newUser = User(msg.sender, usersInArr.length);
+            users[msg.sender] = newUser;
+            usersInArr.push(newUser);
         }
-        return false;
+        return true;
     }
 
-    // function buyLand(address sellerAddress, uint256 price) public payable {
-    //     User memory seller = users[sellerAddress];
-    //     payable(seller.userAddress).transfer(price);
+    // function transferTokenToNewOwner() public payable {
+    // if (createNewUser(msg.sender) == true) {
+    // CryptoToken token = CryptoToken(tokenOwner);
+    // token.approve(msg.sender, 5 * 10**18);
+    // token.transferFrom(owner, msg.sender, 5 * 10**18);
+    // }
     // }
 
     // helps keep track on the ID

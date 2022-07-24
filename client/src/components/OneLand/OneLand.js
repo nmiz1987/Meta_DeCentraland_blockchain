@@ -8,7 +8,12 @@ const OneLand = ({ index, info }) => {
 
 	const chooseColor = (typeOfLand) => {
 		let tmp;
-		if (
+		if (localStorage.getItem("current-user") === "guest") {
+			if (typeOfLand === "Park") tmp = "green";
+			else if (typeOfLand === "Road") tmp = "rgb(59, 59, 59)";
+			else if (info.game === "") tmp = "#6495ED";
+			else if (info.game.length > 0) tmp = "#FF7F50";
+		} else if (
 			ownerID === localStorage.getItem("current-user") &&
 			typeOfLand === "Real Estate"
 		)
