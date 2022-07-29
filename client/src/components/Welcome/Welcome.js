@@ -88,25 +88,25 @@ const Welcome = () => {
 		if (networkData) {
 			const abi = CryptoToken.abi;
 			const address = networkData.address;
+			localStorage.setItem("new-token-contract", address);
+			console.log("new-token-contract", address);
+
 			const contract = new web3.eth.Contract(abi, address);
 			return contract;
 		}
 	};
 
-	const mint = async (landContract, account) => {
+	const mint = async (landContract, account, web3) => {
 		console.log("account", account);
+		const totalSupply = await landContract.methods.totalSupply().call(); // call = get
+		console.log("totalSupply", totalSupply);
 		//there are 10000 lands in the DB
-		for (let i = 0; i < 2; i++) {
-			const tmp = {
-				type: landsDB[i].type,
-				price: landsDB[i].price,
-				forSale: landsDB[i].forSale,
-			};
+		for (let i = totalSupply; i < 2500; i++) {
 			await landContract.methods
-				.createOneLand(tmp.type, tmp.price, tmp.forSale, i)
+				.createOneLand(landsDB[i].type, landsDB[i].forSale, i)
 				.send({ from: account }, (error) => {
 					if (!error) {
-						console.log("land created", tmp);
+						console.log("Created land number", i);
 					}
 				});
 		}
@@ -117,7 +117,7 @@ const Welcome = () => {
 		await loadWeb3TokenContract(web3);
 		const account = await loadWeb3Account(web3);
 		const landContract = await loadWeb3LandContract(web3);
-		await mint(landContract, account);
+		await mint(landContract, account, web3);
 	};
 
 	if (accountInfo === localStorage.getItem("current-user")) {

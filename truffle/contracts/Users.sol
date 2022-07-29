@@ -24,7 +24,7 @@ contract CryptoUser is ERC721, ERC721Enumerable {
     }
 
     // true = new user created, false = user was already in the system
-    function createNewUser(address newUser) internal returns (bool) {
+    function createNewUser() public returns (bool) {
         if (msg.sender != owner) {
             for (uint256 i = 0; i < usersInArr.length; i++) {
                 if (usersInArr[i].userAddress == msg.sender) {

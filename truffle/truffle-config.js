@@ -1,3 +1,4 @@
+const Web3 = require("web3");
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -47,6 +48,7 @@ module.exports = {
 			host: "127.0.0.1", // Localhost (default: none)
 			port: 7545, // Standard Ethereum port (default: none)
 			network_id: "*", // Any network (default: none)
+			networkCheckTimeout: 99999999,
 		},
 		//
 		// An additional network, but with some advanced options…
@@ -81,7 +83,7 @@ module.exports = {
 
 	// Set default mocha options here, use special reporters, etc.
 	mocha: {
-		// timeout: 100000
+		timeout: 9999999999,
 	},
 
 	// Configure your compilers

@@ -103,13 +103,13 @@ const LandInfo = (land) => {
 						<u>
 							<strong>This land costs:</strong>
 						</u>{" "}
-						{landFromDB.price} NMC
+						{landFromDB.price} Ether
 					</div>
 					<div>
 						<u>
 							<strong>You have in your account:</strong>
 						</u>{" "}
-						{balance} NMC
+						{balance} Ether
 					</div>
 					{!localStorage.getItem("BuyLand") &&
 						(landFromDB.ownerID !== accountInfo ? (
@@ -119,7 +119,7 @@ const LandInfo = (land) => {
 										<strong>New Owner Name:</strong>
 									</u>{" "}
 									<input
-										defaultValue={landFromDB.ownerName}
+										placeholder="Owner's name"
 										id="ownerName"
 										onChange={(e) => setOwnerName(e.target.value)}
 									/>

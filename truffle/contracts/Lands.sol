@@ -18,21 +18,50 @@ contract CryptoLand is ERC721, ERC721Enumerable {
     Land[] public landsInArr;
     mapping(uint256 => bool) public lands;
     address payable public owner;
+    uint256 public landsInArrIndex = 0;
+
+    bool[] public landForSaleArr;
 
     constructor() public ERC721("MetaLand", "ETH") {
         owner = payable(msg.sender);
+        // create 2500 lands
+        // for (uint256 i = 0; i < 25; i++) {
+        // create(100, i);
+        // }
+    }
+
+    function create(uint256 size, uint256 offset) public {
+        require(msg.sender == owner, "Only the owner can create new land");
+        uint256 id = landsInArr.length;
+        require(
+            id <= 2500,
+            "Meta DeCentraland has reached the limit of 10000 lands"
+        ); //50 rows * 50 columns
+
+        // a for loop to create the 2500 land in advence, didn't work due to low gas and block limit so i create function
+        for (uint256 i = size * offset; i < size * (offset + 1); i++) {
+            Land memory newLand = Land(
+                "Netanel.Ltd",
+                owner,
+                "Real Estate",
+                5,
+                "https://numble-clone.vercel.app/",
+                true
+            );
+            landsInArr.push(newLand); // to return the all data
+            _safeMint(owner, i);
+        }
     }
 
     function createOneLand(
         string memory _typeOfLand,
-        uint256 _price,
         bool _forSale,
         uint256 index
     ) public {
         require(msg.sender == owner, "Only the owner can create new land");
         uint256 id = landsInArr.length;
         require(
-            id <= 10000,
+            id <= 2500,
             "Meta DeCentraland has reached the limit of 10000 lands"
         ); //50 rows * 50 columns
         // make sure that there aren't 2 NFTs the same!
@@ -40,27 +69,30 @@ contract CryptoLand is ERC721, ERC721Enumerable {
             index >= id,
             "The land you are trying to create is already in the blockchain!"
         );
-        string memory _game;
 
-        // make sure that roads and park are to expensive to purchase
-        if (compareStrings(_typeOfLand, "Real Estate")) {
-            _game = "https://numble-clone.vercel.app/";
-            _price = 5; // default price
-        } else {
-            _game = "";
-            _price = 999999999;
-            _forSale = false;
+        if (index >= id) {
+            string memory _game;
+            uint256 _price;
+            // make sure that roads and park are to expensive to purchase
+            if (compareStrings(_typeOfLand, "Real Estate")) {
+                _game = "https://numble-clone.vercel.app/";
+                _price = 5; // default price
+            } else {
+                _game = "";
+                _price = 999999999; // price to big to buy
+                _forSale = false; // make sure that park and roads are not for sale
+            }
+            Land memory newLand = Land(
+                "Netanel.Ltd",
+                owner,
+                _typeOfLand,
+                _price,
+                _game,
+                _forSale
+            );
+            landsInArr.push(newLand); // to return the all data
+            _mint(owner, index);
         }
-        Land memory newLand = Land(
-            "Netanel.Ltd",
-            owner,
-            _typeOfLand,
-            _price,
-            _game,
-            _forSale
-        );
-        landsInArr.push(newLand); // to return the all data
-        _mint(owner, id);
     }
 
     function updateLand(

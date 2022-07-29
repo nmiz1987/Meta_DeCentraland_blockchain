@@ -48,13 +48,17 @@ const Lands = () => {
 	};
 
 	const loadNFTs = async (contract) => {
-		const totalSupply = await contractInfo.methods.totalSupply().call(); // call = get
-		let nfts = [];
-		for (let i = 0; i < totalSupply; i++) {
-			let land = await contractInfo.methods.landsInArr(i).call();
-			nfts.push(land);
+		try {
+			const totalSupply = await contract.methods.totalSupply().call(); // call = get
+			let nfts = [];
+			for (let i = 0; i < totalSupply; i++) {
+				let land = await contract.methods.landsInArr(i).call();
+				nfts.push(land);
+			}
+			setLands(nfts);
+		} catch (err) {
+			console.error(err);
 		}
-		setLands(nfts);
 	};
 
 	if (!localStorage.getItem("current-user")) {
@@ -64,7 +68,7 @@ const Lands = () => {
 			<div className="allLand">
 				<Map />
 				{!lands.length ? (
-					<h1>No land in the system...</h1>
+					<h1>Please wait, loading data...</h1>
 				) : (
 					lands.map((land, index) => (
 						<OneLand key={index} info={land} index={index} />

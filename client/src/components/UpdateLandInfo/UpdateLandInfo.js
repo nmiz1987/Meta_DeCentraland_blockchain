@@ -121,6 +121,7 @@ const UpdateLand = () => {
 						</u>{" "}
 						<input
 							type="number"
+							placeholder="price"
 							id="price"
 							defaultValue={landFromDB.price}
 							min="15"
@@ -133,8 +134,9 @@ const UpdateLand = () => {
 						<u>
 							<strong>Link to a game:</strong>
 						</u>{" "}
+						(previous url - {landFromDB.game})
 						<input
-							defaultValue={landFromDB.game}
+							placeholder="Game URL"
 							id="game"
 							onChange={(e) => setNewGame(e.target.value)}
 						/>
