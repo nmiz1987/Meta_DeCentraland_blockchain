@@ -1,40 +1,24 @@
-# React Truffle Box
+# Meta CentraLand - Blockchain
 
-This box comes with everything you need to start using Truffle to write, compile, test, and deploy smart contracts, and interact with them from a React app.
+This project was built as part of a Blockchain course, the project simulates a Meta Centra-Land environment where users can purchase, play and manage virtual spaces in exchange for bitcoin.
 
-## Installation
+## requirements
+You need to open 2 terminals, 1 to the frontend and the other to the backend.
+In addition, you have to install ganache on your machine.
 
-First ensure you are in an empty directory.
+## npm install
+The repository contains both frontend and Backend.
+Run `npm install`  twice to install all the dependencies:
+1. In the "client" folder.
+2. In the "truffle" folder.
 
-Run the `unbox` command using 1 of 2 ways.
+## How to run this project?
+1. Run ganache program.
+2. Enter the "client" folder, and then run `npm start`. The frontend site will start an available port. The website should open automatically, if not, open the browser at [http://localhost:3000](http://localhost:3000) (change the port if needed).
+3. You need to compile the contract, run `truffle compile` and then `truffle migrate --reset`.
 
-```sh
-# Install Truffle globally and run `truffle unbox`
-$ npm install -g truffle
-$ truffle unbox react
-```
+**The first account in ganache will be the owner of the contracts and lands, it must be entered into metaMask.**
 
-```sh
-# Alternatively, run `truffle unbox` via npx
-$ npx truffle unbox react
-```
-
-Start the react dev server.
-
-```sh
-$ cd client
-$ npm start
-  Starting the development server...
-```
-
-From there, follow the instructions on the hosted React app. It will walk you through using Truffle and Ganache to deploy the `SimpleStorage` contract, making calls to it, and sending transactions to change the contract's state.
-
-## FAQ
-
-- __How do I use this with Ganache (or any other network)?__
-
-  The Truffle project is set to deploy to Ganache by default. If you'd like to change this, it's as easy as modifying the Truffle config file! Check out [our documentation on adding network configurations](https://trufflesuite.com/docs/truffle/reference/configuration/#networks). From there, you can run `truffle migrate` pointed to another network, restart the React dev server, and see the change take place.
-
-- __Where can I find more resources?__
-
-  This Box is a sweet combo of [Truffle](https://trufflesuite.com) and [Create React App](https://create-react-app.dev). Either one would be a great place to start!
+## Create lands
+You must click on the ADMIN button on the main screen and confirm all 2500 messages (the land is 50*50) for transactions that will appear (I wrote a script in Python that clicks the confirmation 2500 times because it takes a long time).
+There is a limit in the contract for the territories to create only 2500, it is impossible to create beyond that.
